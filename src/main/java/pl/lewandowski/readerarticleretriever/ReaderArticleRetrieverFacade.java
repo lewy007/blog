@@ -1,14 +1,26 @@
 package pl.lewandowski.readerarticleretriever;
 
 
+import pl.lewandowski.authorarticlecud.AuthorArticleCudFacade;
+
 public class ReaderArticleRetrieverFacade {
 
+    AuthorArticleCudFacade authorArticleCudFacade;
+
+    public ReaderArticleRetrieverFacade(AuthorArticleCudFacade authorArticleCudFacade) {
+        this.authorArticleCudFacade = authorArticleCudFacade;
+    }
+
     public ArticleDto retrievalById(Long id) {
+
+        pl.lewandowski.authorarticlecud.ArticleDto foundArticle = authorArticleCudFacade.findAllArticles().stream()
+                .filter(articleDto -> articleDto.id().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("not found error"));
+
         return ArticleDto.builder()
-                .id(1L)
-                .header("jak zostac programista")
-                .content("5 krokow: 1, 2, 3, 4")
-                .category("IT")
+                .id(foundArticle.id())
+                .header(foundArticle.header())
                 .build();
     }
 }
